@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fota och Skicka Underlag</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 400px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button, input[type="file"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover, input[type="file"]:hover {
+            background-color: #0056b3;
+        }
+
+        #emailStatus {
+            margin-top: 15px;
+            color: green;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        #cameraLabel {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Skicka Underlag</h1>
+        
+        <!-- Knapp för att öppna kameran -->
+        <label for="cameraInput" id="cameraLabel">Fota intyg</label>
+        <input type="file" accept="image/*" capture="environment" id="cameraInput">
+        
+        <!-- Knapp för att skicka bilden via e-post -->
+        <button id="submitBtn">Skicka in underlag</button>
+        
+        <p id="emailStatus"></p>
+    </div>
+
+    <script>
+        const cameraInput = document.getElementById('cameraInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const emailStatus = document.getElementById('emailStatus');
+        let imageFile = null;
+
+        // När användaren väljer en bild
+        cameraInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                imageFile = file;
+                emailStatus.textContent = "Bild vald: " + file.name;
+            }
+        });
+
+        // När användaren klickar på "Skicka in underlag"
+        submitBtn.addEventListener('click', function() {
+            if (!imageFile) {
+                emailStatus.textContent = "Ingen bild vald. Ta en bild först!";
+                emailStatus.style.color = "red";
+                return;
+            }
+
+            // Simulerar e-postsändning (via ett externt server-script eller tjänst)
+            const formData = new FormData();
+            formData.append('file', imageFile);
+
+            // AJAX-anrop för att skicka bilden
+            fetch('https://din-server.com/send-email', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    emailStatus.textContent = "Underlag skickat!";
+                    emailStatus.style.color = "green";
+                } else {
+                    emailStatus.textContent = "Något gick fel. Försök igen.";
+                    emailStatus.style.color = "red";
+                }
+            })
+            .catch(error => {
+                emailStatus.textContent = "Fel: " + error.message;
+                emailStatus.style.color = "red";
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
